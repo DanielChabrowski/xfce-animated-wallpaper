@@ -17,7 +17,7 @@ endif()
 add_compile_options(
     -Werror
     -Wall
-    #-Wextra
+    -Wextra
     -Wpedantic
     -Wredundant-decls
     -Wnon-virtual-dtor
