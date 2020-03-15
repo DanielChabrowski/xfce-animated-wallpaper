@@ -1,5 +1,11 @@
 #pragma once
 
+#include "Monitor.hpp"
+#include "WallpaperWindow.hpp"
+
+#include <memory>
+#include <vector>
+
 namespace aw
 {
 class Application final
@@ -11,5 +17,13 @@ public:
     Application &operator=(const Application &) = delete;
 
     int run();
+
+private:
+    void loadMonitors();
+    void createWindows();
+
+private:
+    std::vector<Monitor> monitors;
+    std::vector<std::unique_ptr<WallpaperWindow>> windows;
 };
 } // namespace aw

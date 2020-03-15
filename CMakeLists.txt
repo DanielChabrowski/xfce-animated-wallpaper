@@ -16,6 +16,7 @@ set(MODULE_NAME xfce-animated-wallpaper)
 add_executable(${MODULE_NAME}
     src/main.cpp
     src/Application.cpp
+    src/WallpaperWindow.cpp
 )
 
 target_link_libraries(${MODULE_NAME}
