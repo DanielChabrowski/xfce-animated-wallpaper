@@ -1,6 +1,9 @@
 #include "WallpaperWindow.hpp"
 #include "Monitor.hpp"
 
+#include <gdk/gdkx.h>
+#include <gst/video/videooverlay.h>
+
 namespace aw
 {
 WallpaperWindow::WallpaperWindow(const Monitor &monitor)
@@ -31,5 +34,29 @@ WallpaperWindow::WallpaperWindow(const Monitor &monitor)
 
     gtk_widget_show_all(mainWindow);
     gtk_widget_realize(drawingArea);
+
+    playbin = gst_element_factory_make("playbin", "play");
+    g_object_set(G_OBJECT(playbin), "mute", true, NULL);
+
+    GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(playbin));
+    gst_object_unref(bus);
+
+    GstElement *x_overlay = gst_element_factory_make("xvimagesink", "videosink");
+    g_object_set(G_OBJECT(playbin), "video-sink", x_overlay, NULL);
+
+    // GstElement *rateFilter = gst_element_factory_make("videorate", "videorate");
+    // g_object_set(G_OBJECT(rateFilter), "max-rate", 2, NULL);
+    // g_object_set(G_OBJECT(playbin), "video-filter", rateFilter, NULL);
+
+    gst_video_overlay_set_window_handle(GST_VIDEO_OVERLAY(x_overlay),
+                                        GDK_WINDOW_XID(gtk_widget_get_parent_window(drawingArea)));
+}
+
+void WallpaperWindow::applyWallpaper(const std::string &path)
+{
+    g_message("Applying wallpaper: %s", path.c_str());
+
+    g_object_set(G_OBJECT(playbin), "uri", path.c_str(), NULL);
+    gst_element_set_state(playbin, GST_STATE_PLAYING);
 }
 } // namespace aw

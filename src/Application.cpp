@@ -5,13 +5,6 @@
 #include <gst/gst.h>
 #include <gtk/gtk.h>
 
-#include <iostream>
-
-namespace
-{
-GMainLoop *mainLoop{ nullptr };
-}
-
 namespace aw
 {
 Application::Application(int argc, char *argv[])
@@ -21,15 +14,13 @@ Application::Application(int argc, char *argv[])
 
     g_message("Starting application");
 
-    mainLoop = g_main_loop_new(nullptr, false);
-
     loadMonitors();
 }
 
 int Application::run()
 {
     createWindows();
-    g_main_loop_run(mainLoop);
+    gtk_main();
     return 0;
 }
 

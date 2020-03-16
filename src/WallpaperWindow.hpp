@@ -17,7 +17,10 @@ public:
     WallpaperWindow(const WallpaperWindow &) = delete;
     WallpaperWindow &operator=(const WallpaperWindow &) = delete;
 
+    void applyWallpaper(const std::string &path);
+
 private:
+    GstElement *playbin;
     GtkWidget *mainWindow;
     GtkWidget *hBox;
     GtkWidget *drawingArea;
