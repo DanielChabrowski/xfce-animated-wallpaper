@@ -1,9 +1,39 @@
 #include "Application.hpp"
+#include "Options.hpp"
 #include "WallpaperWindow.hpp"
 
 #include <gdk/gdkx.h>
 #include <gst/gst.h>
 #include <gtk/gtk.h>
+
+namespace
+{
+aw::Options parseCommandLineOptions(int argc, char *argv[])
+{
+    aw::Options o;
+
+    const char *wallpaperPath{ nullptr };
+
+    static GOptionEntry entries[] = {
+        { "wallpaper", 'w', 0, G_OPTION_ARG_STRING, &wallpaperPath, "Wallpaper path", "M" }, { NULL }
+    };
+
+    GOptionContext *context = g_option_context_new("xfce-animated-wallpaper");
+    g_option_context_add_main_entries(context, entries, nullptr);
+    g_option_context_add_group(context, gtk_get_option_group(true));
+
+    GError *error = NULL;
+    if(!g_option_context_parse(context, &argc, &argv, &error))
+    {
+        g_error("option parsing failed: %s\n", error->message);
+        std::exit(1);
+    }
+
+    o.wallpaperPath = std::string{ wallpaperPath };
+
+    return o;
+}
+} // namespace
 
 namespace aw
 {
@@ -14,15 +44,26 @@ Application::Application(int argc, char *argv[])
 
     g_message("Starting application");
 
+    options = parseCommandLineOptions(argc, argv);
+    g_message("Wallpaper path: %s", options.wallpaperPath.c_str());
+
     loadMonitors();
 }
 
 int Application::run()
 {
     createWindows();
+
+    for(auto &window : windows)
+    {
+        window->applyWallpaper("file://" + options.wallpaperPath);
+    }
+
     gtk_main();
     return 0;
 }
+
+void parseCommandLineOptions(int argc, char *argv[]);
 
 void Application::loadMonitors()
 {

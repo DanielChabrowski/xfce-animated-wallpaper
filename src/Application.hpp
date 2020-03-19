@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Monitor.hpp"
+#include "Options.hpp"
 #include "WallpaperWindow.hpp"
 
 #include <memory>
@@ -23,6 +24,7 @@ private:
     void createWindows();
 
 private:
+    Options options;
     std::vector<Monitor> monitors;
     std::vector<std::unique_ptr<WallpaperWindow>> windows;
 };
