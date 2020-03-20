@@ -39,6 +39,16 @@ WallpaperWindow::WallpaperWindow(const Monitor &monitor)
     constexpr unsigned int flags = 0x00000001 | 0x00000200 | 0x00000400;
     g_object_set(G_OBJECT(playbin), "flags", flags, NULL);
 
+    g_signal_connect(playbin, "about-to-finish", G_CALLBACK(+[](GstElement *, gpointer data) {
+                         auto *self = reinterpret_cast<WallpaperWindow *>(data);
+
+                         gchar *currentUri{ nullptr };
+                         g_object_get(G_OBJECT(self->playbin), "current-uri", &currentUri, NULL);
+
+                         g_object_set(G_OBJECT(self->playbin), "uri", currentUri, NULL);
+                     }),
+                     this);
+
     GstElement *x_overlay = gst_element_factory_make("xvimagesink", "videosink");
     g_object_set(G_OBJECT(playbin), "video-sink", x_overlay, NULL);
 
