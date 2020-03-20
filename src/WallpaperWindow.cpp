@@ -42,9 +42,6 @@ WallpaperWindow::WallpaperWindow(const Monitor &monitor)
     constexpr unsigned int flags = 0x00000001 | 0x00000200 | 0x00000400;
     g_object_set(G_OBJECT(playbin), "flags", flags, NULL);
 
-    GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(playbin));
-    gst_object_unref(bus);
-
     GstElement *x_overlay = gst_element_factory_make("xvimagesink", "videosink");
     g_object_set(G_OBJECT(playbin), "video-sink", x_overlay, NULL);
 
