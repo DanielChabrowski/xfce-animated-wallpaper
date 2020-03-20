@@ -22,7 +22,6 @@ public:
 private:
     GstElement *playbin;
     GtkWidget *mainWindow;
-    GtkWidget *hBox;
     GtkWidget *drawingArea;
 };
 } // namespace aw

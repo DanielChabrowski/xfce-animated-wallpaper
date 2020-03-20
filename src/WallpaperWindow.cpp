@@ -27,10 +27,7 @@ WallpaperWindow::WallpaperWindow(const Monitor &monitor)
 
     drawingArea = gtk_drawing_area_new();
 
-    hBox = gtk_box_new(GtkOrientation::GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_pack_start(GTK_BOX(hBox), drawingArea, false, true, 0);
-
-    gtk_container_add(GTK_CONTAINER(mainWindow), hBox);
+    gtk_container_add(GTK_CONTAINER(mainWindow), drawingArea);
 
     gtk_widget_show_all(mainWindow);
     gtk_widget_realize(drawingArea);
